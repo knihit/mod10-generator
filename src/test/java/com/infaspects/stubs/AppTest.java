@@ -1,7 +1,7 @@
 package com.infaspects.stubs;
 
 import com.infaspects.stubs.generator.CardNumberGenerator;
-import jdk.internal.jline.internal.TestAccessible;
+import com.infaspects.stubs.generator.Mod10NumberGenerator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,26 +15,22 @@ public class AppTest {
     @Autowired
     CardNumberGenerator cardNumberGeneratorTest;
 
-    //@Bean
-    //public Mod10NumberGenerator getMod10NumberGeneratorTest() {
-    //    return new Mod10NumberGenerator(9);
-    //}
+    @Bean
+    public Mod10NumberGenerator getMod10NumberGeneratorTest() {
+        return new Mod10NumberGenerator(9);
+    }
 
     @Bean
     public CardNumberGenerator getCardNumberGeneratorTest() {
         return new CardNumberGenerator("4519", "02", mod10NumberGeneratorTest.getMod10Number());
     }
 
-    /*@Test
+    @Test
     public void testMod10Generator() {
         String number = mod10NumberGeneratorTest.getMod10Number();
         System.out.println(number);
-        if (number.length() == 9) {
-            assert true;
-        } else {
-            assert false;
-        }
-    }*/
+        assertTrue(number.length() == 9);
+    }
 
     @Test
     public void testCardNumberGenerator() {
