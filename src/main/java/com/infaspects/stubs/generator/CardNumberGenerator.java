@@ -2,6 +2,7 @@ package com.infaspects.stubs.generator;
 
 import com.infaspects.stubs.util.CheckDigitHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +28,6 @@ public class CardNumberGenerator {
     private String clientID;
 
 
-    @Bean
-    public Mod10NumberGenerator getMod10NumberGenerator(){
-        return new Mod10NumberGenerator(9);
-    }
-
-
     @Autowired
     Mod10NumberGenerator mod10NumberGenerator;
 
@@ -43,7 +38,8 @@ public class CardNumberGenerator {
      * @param centerCode
      * @param clientID
      */
-    public CardNumberGenerator(String bankIdentificationNum, String centerCode, String clientID) {
+    @Autowired
+    public CardNumberGenerator(@Value("")String bankIdentificationNum, @Value("") String centerCode, @Value("") String clientID) {
         this.bankIdentificationNum = bankIdentificationNum;
         this.centerCode = centerCode;
         this.clientID = clientID;
@@ -56,10 +52,11 @@ public class CardNumberGenerator {
      * @param bankIdentificationNum
      * @param centerCode
      */
-    public CardNumberGenerator (String bankIdentificationNum, String centerCode) {
+    /*@Autowired
+    public CardNumberGenerator (@Value("") String bankIdentificationNum, @Value("") String centerCode) {
         this.bankIdentificationNum = bankIdentificationNum;
         this.centerCode = centerCode;
-    }
+    }*/
 
     /**
      * Method that returns client card

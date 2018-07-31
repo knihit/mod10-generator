@@ -1,5 +1,6 @@
 package com.infaspects.stubs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -15,38 +16,32 @@ import javax.annotation.Resource;
 
 import static org.junit.Assert.assertTrue;
 
+@Component
 @ContextConfiguration(
         classes={Mod10NumberGenerator.class, CardNumberGenerator.class}
 )
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AppTest {
 
-    @Resource(name="mod10NumberGeneratorTest")
-    Mod10NumberGenerator mod10NumberGeneratorTest;
+    Mod10NumberGenerator mod10NumberGenerator;
 
-    @Resource(name="cardNumberGeneratorTest")
-    CardNumberGenerator cardNumberGeneratorTest;
+    CardNumberGenerator cardNumberGenerator;
 
-    @Bean(name="mod10NumberGeneratorTest")
-    public Mod10NumberGenerator mod10NumberGeneratorTest() {
-        return new Mod10NumberGenerator(9);
-    }
-
-    @Bean(name="cardNumberGeneratorTest")
-    public CardNumberGenerator cardNumberGeneratorTest() {
-        return new CardNumberGenerator("4519", "02", mod10NumberGeneratorTest.getMod10Number());
+    @Bean(name="cardNumberGenerator")
+    public CardNumberGenerator cardNumberGenerator() {
+        return new CardNumberGenerator("4519", "02", mod10NumberGenerator.getMod10Number());
     }
 
     @Test
     public void testMod10Generator() {
-        String number = mod10NumberGeneratorTest.getMod10Number();
+        String number = mod10NumberGenerator.getMod10Number();
         System.out.println(number);
         assertTrue(number.length() == 9);
     }
 
     @Test
     public void testCardNumberGenerator() {
-        String cardNumber = cardNumberGeneratorTest.generateClientCard();
+        String cardNumber = cardNumberGenerator.generateClientCard();
         System.out.println(cardNumber);
 
         assertTrue(cardNumber.length() == 16);
