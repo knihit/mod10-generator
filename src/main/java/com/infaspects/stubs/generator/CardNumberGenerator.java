@@ -1,9 +1,11 @@
 package com.infaspects.stubs.generator;
 
+import com.infaspects.stubs.AppConfig;
 import com.infaspects.stubs.util.CheckDigitHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,11 +17,13 @@ public class CardNumberGenerator {
     /**
      * The bank identification number
      */
+    @Value("${default.bin:5402}")
     private String bankIdentificationNum;
 
     /**
      * Center code as applicable
      */
+    @Value("${default.center:02}")
     private String centerCode;
 
     /**
@@ -27,9 +31,11 @@ public class CardNumberGenerator {
      */
     private String clientID;
 
+    public CardNumberGenerator() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        this.clientID = ((Mod10NumberGenerator)context.getBean("mod10ClientID")).getMod10Number();
+    }
 
-    @Autowired
-    Mod10NumberGenerator mod10NumberGenerator;
 
     /**
      * Initialize the instance with BIN, Center Code & Client Identity
@@ -38,8 +44,7 @@ public class CardNumberGenerator {
      * @param centerCode
      * @param clientID
      */
-    @Autowired
-    public CardNumberGenerator(@Value("")String bankIdentificationNum, @Value("") String centerCode, @Value("") String clientID) {
+    public CardNumberGenerator(String bankIdentificationNum,  String centerCode,  String clientID) {
         this.bankIdentificationNum = bankIdentificationNum;
         this.centerCode = centerCode;
         this.clientID = clientID;
@@ -52,11 +57,12 @@ public class CardNumberGenerator {
      * @param bankIdentificationNum
      * @param centerCode
      */
-    /*@Autowired
-    public CardNumberGenerator (@Value("") String bankIdentificationNum, @Value("") String centerCode) {
+    @Autowired
+    public CardNumberGenerator ( String bankIdentificationNum, String centerCode, Mod10NumberGenerator mod10ClientID) {
         this.bankIdentificationNum = bankIdentificationNum;
         this.centerCode = centerCode;
-    }*/
+        this.clientID = mod10ClientID.getMod10Number();
+    }
 
     /**
      * Method that returns client card
@@ -66,9 +72,9 @@ public class CardNumberGenerator {
     public String generateClientCard () {
         StringBuilder clientCard = new StringBuilder();
 
-        if ("".equals(clientID) || null == clientID) {
-            clientID = mod10NumberGenerator.getMod10Number();
-        }
+        /*if ("".equals(clientID) || null == clientID) {
+            clientID = mod10ClientID.getMod10Number();
+        }*/
 
         clientCard.append(bankIdentificationNum).append(centerCode).append(clientID);
         return clientCard.append(CheckDigitHelper.generateCheckDigit(clientCard.toString())).toString();

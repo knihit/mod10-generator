@@ -1,7 +1,6 @@
 package com.infaspects.stubs.generator;
 
 import com.infaspects.stubs.util.CheckDigitHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,16 @@ import java.util.Random;
 @Component
 public class Mod10NumberGenerator {
 
+    @Value("${default.length:9}")
     private int numberLength;
+
+    /**
+     * Constructor to initialize the object with the length of the random number to be generated
+     *
+     *
+     */
+    public Mod10NumberGenerator() {
+    }
 
     /**
      * Constructor to initialize the object with the length of the random number to be generated
@@ -21,8 +29,7 @@ public class Mod10NumberGenerator {
      * @param numberLength - lenght of the random number including the check digit
      *
      */
-    @Autowired
-    public Mod10NumberGenerator(@Value("9") int numberLength) {
+    public Mod10NumberGenerator(int numberLength) {
         this.numberLength = numberLength;
     }
 
